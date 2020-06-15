@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>todolist</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script>
+    function addTodo() {
+        const name = $('#todo').val();
+        if (!name) {
+            alert("Введите todo");
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/todolist/todo',
+            data: {
+                name,
+            }
+        });
+        document.getElementById('todo').value = '';
+        loadTodo()
+    }
+    function loadTodo() {
+        $('#thead').remove();
+        $('#tablebody').remove();
+        $('#table').append(
+            '<thead id="thead">' +
+            '<tr>' +
+            '<th style="width: 120px;">Описание</th>' +
+            '<th style="width: 10%;">Выполнено</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody id="tablebody">' +
+            '</tbody>'
+        );
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/todolist/todo',
+            dataType: 'text'
+        }).done(function(data) {
+            const todos = JSON.parse(data);
+            const allShow = document.getElementById("showAll").checked;
+            for (let i = 0; i < todos.length; ++i) {
+                const todo = todos[i];
+                const done = (todo.done === "false") ? 'Нет' : 'Да';
+                if (allShow) {
+                    $('#tablebody').append('<tr><td tyle="width: 120px;">' + todo.name + '</td>' + '<td tyle="width: 10%;">' + done + '</td>' + '</tr>');
+                } else {
+                    if (todo.done === "true") {
+                        $('#tablebody').append('<tr><td tyle="width: 120px;">' + todo.name + '</td>' + '<td tyle="width: 10%;">' + done + '</td>' + '</tr>');
+                    }
+                }
+            }
+        }).fail(function(err){
+            alert(err.toSource);
+        });
+    }
+    loadTodo();
+</script>
+<div class="container">
+    <div class="card-body">
+        <form>
+            <div class="form-group">
+                <label for="todo">Добавить todo</label>
+                <input type="input" class="form-control" id="todo" aria-describedby="add todo" placeholder="Enter todo">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTodo()">Добавить</button>
+        </form>
+    </div>
+    <div class="container">
+        <label for="showAll">Показать все</label>
+        <input id="showAll" type="checkbox" onclick="loadTodo()">
+        <table id="table" class="table table-bordered">
+            <thead id="thead">
+                <tr>
+                    <th style="width: 120px;">Описание</th>
+                    <th style="width: 10%;">Выполнено</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
