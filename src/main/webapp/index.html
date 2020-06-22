@@ -37,6 +37,7 @@
             '<thead id="thead">' +
             '<tr>' +
             '<th style="width: 120px;">Описание</th>' +
+            '<th style="width: 15%;">Автор</th>' +
             '<th style="width: 10%;">Выполнено</th>' +
             '</tr>' +
             '</thead>' +
@@ -53,11 +54,20 @@
             for (let i = 0; i < todos.length; ++i) {
                 const todo = todos[i];
                 const done = (todo.done === "false") ? 'Нет' : 'Да';
+                const author = (!todo.user) ? 'Нет автора' : todo.user.name
                 if (allShow) {
-                    $('#tablebody').append('<tr><td tyle="width: 120px;">' + todo.name + '</td>' + '<td tyle="width: 10%;">' + done + '</td>' + '</tr>');
+                    $('#tablebody').append(
+                        '<tr><td tyle="width: 120px;">' + todo.name + '</td>' +
+                        '<td tyle="width: 15%;">' + author + '</td>'  +
+                        '<td tyle="width: 10%;">' + done + '</td>' + '</tr>'
+                    );
                 } else {
                     if (todo.done === "true") {
-                        $('#tablebody').append('<tr><td tyle="width: 120px;">' + todo.name + '</td>' + '<td tyle="width: 10%;">' + done + '</td>' + '</tr>');
+                        $('#tablebody').append(
+                            '<tr><td tyle="width: 120px;">' + todo.name + '</td>' +
+                            '<td tyle="width: 15%;">' + author + '</td>'  +
+                            '<td tyle="width: 10%;">' + done + '</td>' + '</tr>'
+                        );
                     }
                 }
             }
@@ -83,7 +93,8 @@
         <table id="table" class="table table-bordered">
             <thead id="thead">
                 <tr>
-                    <th style="width: 120px;">Описание</th>
+                    <th style="width: 100px;">Описание</th>
+                    <th style="width: 15%;">Автор</th>
                     <th style="width: 10%;">Выполнено</th>
                 </tr>
             </thead>

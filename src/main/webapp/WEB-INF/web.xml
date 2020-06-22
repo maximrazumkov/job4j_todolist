@@ -28,6 +28,14 @@
       <param-value>3600</param-value>
     </init-param>
   </filter>
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>ru.job4j.todolist.filter.AuthFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
   <filter-mapping>
     <filter-name>CorsFilter</filter-name>
     <url-pattern>*</url-pattern>
@@ -36,6 +44,22 @@
     <servlet-name>TodoServlet</servlet-name>
     <servlet-class>ru.job4j.todolist.servlerts.TodoServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>AuthServlet</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlerts.AuthServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RegServlet</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlerts.RegServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegServlet</servlet-name>
+    <url-pattern>/reg</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AuthServlet</servlet-name>
+    <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>TodoServlet</servlet-name>
     <url-pattern>/todo</url-pattern>

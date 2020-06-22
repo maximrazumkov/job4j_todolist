@@ -6,17 +6,20 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.User;
 
 import java.util.List;
 import java.util.function.Function;
 
 public class PsqlStore implements Store {
 
-    private final SessionFactory sf;
+    private SessionFactory sf;
 
     private PsqlStore() {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure().build();
         this.sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
     }
 
@@ -26,6 +29,25 @@ public class PsqlStore implements Store {
 
     public static Store instOf() {
         return Lazy.INST;
+    }
+
+    @Override
+    public List<User> findByName(String name) {
+        return this.tx(
+                session -> {
+                   Query<User> query = session.createQuery("from User u where u.name = :name");
+                   query.setParameter("name", name);
+                   return query.list();
+                }
+        );
+    }
+
+    @Override
+    public Integer createUser(User user) {
+        return this.tx(session -> {
+            session.save(user);
+            return user.getId();
+        });
     }
 
     @Override

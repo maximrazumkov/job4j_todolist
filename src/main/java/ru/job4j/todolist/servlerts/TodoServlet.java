@@ -1,6 +1,7 @@
 package ru.job4j.todolist.servlerts;
 
 import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.User;
 import ru.job4j.todolist.store.PsqlStore;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,8 @@ public class TodoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
-        PsqlStore.instOf().createTodo(new Item(name, true, false));
+        Integer id = (Integer) req.getSession().getAttribute("userUUID");
+        PsqlStore.instOf().createTodo(new Item(name, true, false, new User(id)));
         resp.setContentType("text/json");
         resp.setCharacterEncoding("UTF-8");
     }

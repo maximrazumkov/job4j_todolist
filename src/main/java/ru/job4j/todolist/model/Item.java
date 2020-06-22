@@ -1,7 +1,5 @@
 package ru.job4j.todolist.model;
 
-import net.bytebuddy.dynamic.loading.PackageDefinitionStrategy;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -16,6 +14,10 @@ public class Item implements Serializable {
     private Boolean created;
     private Boolean done;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Item() {
     }
 
@@ -23,6 +25,13 @@ public class Item implements Serializable {
         this.name = name;
         this.created = created;
         this.done = done;
+    }
+
+    public Item(String name, Boolean created, Boolean done, User user) {
+        this.name = name;
+        this.created = created;
+        this.done = done;
+        this.user = user;
     }
 
     public Integer getId() {
@@ -83,6 +92,7 @@ public class Item implements Serializable {
                 ", \"name\":\"" + name + '\"' +
                 ", \"created\":\"" + created + '\"' +
                 ", \"done\":\"" + done + '\"' +
+                ", \"user\":" + user  +
                 '}';
     }
 }
